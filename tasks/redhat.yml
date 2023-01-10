@@ -1,6 +1,11 @@
 ---
 
 # TODO Update sources and packages.
+- name: "Upgrade packages. (dnf)"
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    autoremove: true
 
 - name: "Clear /etc/machine-id"
   ansible.builtin.lineinfile:
@@ -55,9 +60,13 @@
     mode: 0755
 
 # Install cloud-init.
+- name: "Install cloud-init."
+  ansible.builtin.dnf:
+    name:
+      - cloud-init
+    state: present
 
 - name: "Ensure cloud-init started on boot."
   ansible.builtin.systemd:
     name: cloud-init
     enabled: true
-
