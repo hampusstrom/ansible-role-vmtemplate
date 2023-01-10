@@ -35,3 +35,7 @@
   ansible.builtin.include_tasks:
     file: redhat.yml
   when: ansible_os_family == "Redhat"
+
+- name: Shutdown guest.
+  community.general.shutdown:
+  when: ansible_virtualization_type != 'docker' # We shouldn't shutdown a docker container from within.
