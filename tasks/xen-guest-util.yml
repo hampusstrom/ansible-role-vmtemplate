@@ -6,6 +6,7 @@
     fstype: iso9660
     src: "{{ vmtemplate_cdrom_path }}"
     path: "{{ vmtemplate_cdrom_mount_path }}"
+    state: present
 
 - name: "Run xe-guest-utilities install script."
   ansible.builtin.command:
