@@ -8,7 +8,7 @@ This role has been tested on the following platforms:
 * Debian 11 Guest on Proxmox 7.3.4
 
 ## Installation
-### ansible-galaxy
+### ansible-galaxy **Soon(tm)**
 ```
 NotImplementedException on line 1: ansible-galaxy install hampusstrom.vmtemplate
 ```
