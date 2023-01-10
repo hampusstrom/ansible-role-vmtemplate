@@ -2,21 +2,7 @@
 - name: Converge
   hosts: all
   gather_facts: true
-  pre_tasks:
-    - name: "Install dbus (for hostnamectl)."
-      ansible.builtin.apt:
-        pkg:
-          - dbus
-        update_cache: true
-        cache_valid_time: 3600
-    - name: "Start dbus service."
-      ansible.builtin.systemd:
-        name: dbus
-        state: started
-    - name: "Install ssh."
-      ansible.builtin.apt:
-        pkg:
-          - ssh
+
   tasks:
     - name: "Include hampusstrom.vmtemplate"
       include_role:
