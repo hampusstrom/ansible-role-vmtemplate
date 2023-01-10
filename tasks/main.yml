@@ -1,12 +1,6 @@
 ---
 # tasks file for vmtemplate
 
-- debug:
-    var: ansible_virtualization_type
-
-- debug:
-    var: ansible_virtualization_role
-
 - name: Set timezone.
   ansible.builtin.timezone:
     name: "{{ vmtemplate_timezone }}"
@@ -16,7 +10,7 @@
     file: xen-guest-util.yml
   when: ansible_virtualization_role == "guest" and ansible_virtualization_type == "xen"
 
-- name: Install QEMU Guest Agent.
+- name: Install QEMU Guest Agent (Proxmox/KVM).
   ansible.builtin.include_tasks:
     file: kvm-guest-util.yml
   when: ansible_virtualization_role == "guest" and ansible_virtualization_type == "kvm"
