@@ -1,0 +1,11 @@
+---
+- name: Install qemu-guest-agent.
+  ansible.builtin.package:
+    name: qemu-guest-agent
+    state: present
+
+- name: Start and enable qemu-guest-agent.
+  ansible.builtin.systemd:
+    name: qemu-guest-agent
+    state: started
+    enabled: true

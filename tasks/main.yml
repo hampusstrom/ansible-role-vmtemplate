@@ -1,0 +1,37 @@
+---
+# tasks file for vmtemplate
+
+- debug:
+    var: ansible_virtualization_type
+
+- debug:
+    var: ansible_virtualization_role
+
+- name: Set timezone.
+  ansible.builtin.timezone:
+    name: "{{ vmtemplate_timezone }}"
+
+- name: Install xe-guest-utilities (XCP-NG/XenServer guests).
+  ansible.builtin.include_tasks:
+    file: xen-guest-util.yml
+  when: ansible_virtualization_role == "guest" and ansible_virtualization_type == "xen"
+
+- name: Install QEMU Guest Agent.
+  ansible.builtin.include_tasks:
+    file: kvm-guest-util.yml
+  when: ansible_virtualization_role == "guest" and ansible_virtualization_type == "kvm"
+
+- name: "Set generic hostname."
+  ansible.builtin.hostname:
+    name: localhost.localdomain
+  when: ansible_virtualization_type != 'docker' # We can't change hostname of a running docker container (molecule)
+
+- name: Unconfigure guest (Debian family).
+  ansible.builtin.include_tasks:
+    file: debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Unconfigure guest (Redhat family).
+  ansible.builtin.include_tasks:
+    file: redhat.yml
+  when: ansible_os_family == "Redhat"

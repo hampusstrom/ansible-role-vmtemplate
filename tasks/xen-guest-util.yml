@@ -1,0 +1,22 @@
+---
+
+# Your VM must have the guest tools ISO mounted to proceed.
+- name: "Attempt to mount cdrom."
+  ansible.posix.mount:
+    fstype: iso9660
+    src: "{{ vmtemplate_cdrom_path }}"
+    path: "{{ vmtemplate_cdrom_mount_path }}"
+
+- name: "Run xe-guest-utilities install script."
+  ansible.builtin.command:
+    cmd: |
+      bash "{{ vmtemplate_cdrom_mount_path }}/Linux/install.sh"
+    creates: /etc/systemd/system/xe-linux-distribution.service
+  register: __vmtemplate_install_status
+  failed_when: __vmtemplate_install_status.rc != 0
+
+- name: "Enable and start xe-linux-distribution.service"
+  ansible.builtin.systemd:
+    name: xe-linux-distribution.service
+    state: started
+    enabled: true

@@ -1,0 +1,62 @@
+---
+
+# Update sources and packages.
+
+- name: "Clear /etc/machine-id"
+  ansible.builtin.lineinfile:
+    path: /etc/machine-id
+    line: ''
+    regexp: '.'
+    mode: 0444
+    owner: root
+    group: root
+
+- name: "Clear dbus machine-id."
+  ansible.builtin.lineinfile:
+    path: /etc/machine-id
+    line: ''
+    regexp: '.'
+    mode: 0444
+    owner: root
+    group: root
+
+- name: "Remove ssh host keys."
+  ansible.builtin.file:
+    state: absent
+    path: /etc/ssh/ssh_host_*
+
+- name: "Clear machine SSH known hosts."
+  ansible.builtin.known_hosts:
+    state: absent
+    name: '*'
+    path: /etc/ssh/ssh_known_hosts
+
+- name: "Remove root ssh config and keys."
+  ansible.builtin.file:
+    state: absent
+    path: /root/.ssh/*
+
+- name: "Remove root .bash_history."
+  ansible.builtin.file:
+    state: absent
+    path: /root/.bash_history
+
+- name: "Clear all log files."
+  ansible.builtin.file:
+    state: absent
+    path: /var/log
+
+- name: "Recreate /var/log."
+  ansible.builtin.file:
+    state: directory
+    path: /var/log
+    owner: root
+    group: root
+    mode: 0755
+
+# Install cloud-init.
+
+- name: "Ensure cloud-init started on boot."
+  ansible.builtin.systemd:
+    name: cloud-init
+    enabled: true

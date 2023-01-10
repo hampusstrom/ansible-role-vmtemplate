@@ -1,0 +1,5 @@
+---
+# defaults file for vmtemplate
+vmtemplate_cdrom_path: /dev/sr0
+vmtemplate_cdrom_mount_path: /mnt
+vmtemplate_timezone: Europe/Stockholm
