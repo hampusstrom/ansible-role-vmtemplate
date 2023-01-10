@@ -1,7 +1,11 @@
-# Role Name
+# Ansible Role: VMTemplate
 
 
 An ansible role to automate the process of preparing a Linux VM guest for becoming a template in your favourite hypervisor.
+
+## Compatibility
+This role has been tested on the following platforms:
+* Debian 11 Guest on Proxmox 7.3.4
 
 ## Installation
 ### ansible-galaxy
@@ -64,9 +68,4 @@ default: `Europe/Stockholm`
 License
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+MIT
