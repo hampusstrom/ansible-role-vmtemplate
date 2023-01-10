@@ -1,0 +1,6 @@
+---
+- hosts: mytemplatevm
+  gather_facts: true
+  become: true
+  roles:
+    - hampusstrom.vmtemplate
