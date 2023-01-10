@@ -28,7 +28,7 @@
 - name: Unconfigure guest (Redhat family).
   ansible.builtin.include_tasks:
     file: redhat.yml
-  when: ansible_os_family == "Redhat"
+  when: ansible_os_family == "RedHat"
 
 - name: Shutdown guest.
   community.general.shutdown:

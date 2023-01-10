@@ -5,6 +5,9 @@
   ansible.builtin.dnf:
     name: "*"
     state: latest
+
+- name: "Autoremove unused packages. (dnf)"
+  ansible.builtin.dnf:
     autoremove: true
 
 - name: "Clear /etc/machine-id"
@@ -29,12 +32,6 @@
   ansible.builtin.file:
     state: absent
     path: /etc/ssh/ssh_host_*
-
-- name: "Clear machine SSH known hosts."
-  ansible.builtin.known_hosts:
-    state: absent
-    name: '*'
-    path: /etc/ssh/ssh_known_hosts
 
 - name: "Remove root ssh config and keys."
   ansible.builtin.file:
