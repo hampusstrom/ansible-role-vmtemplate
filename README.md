@@ -26,16 +26,35 @@ git clone https://github.com/hampusstrom/ansible-role-vmtemplate.git /etc/ansibl
 
 ## Requirements
 
-Requires root: yes
+### Init System(s): **systemd**
+### Requires root: **yes**
 
-A virtual machine running on either:
-* XCP-NG
+A linux virtual machine guest running on either:
+* XCP-ng
 * XenServer
 * Proxmox
 
-### XCP-NG
-Requires the guest tools ISO to be mounted as a cdrom device on the guest.
-The role will automatically mount /dev/sr0 (can be changed using vmtemplate_cdrom_path) and install the guest tools from there.
+Since we require root, use this role in a playbook that has `become:yes` globally defined or call this role using the `become: yes` keyword.
+```yaml
+- hosts: mytemplatevm
+  become: yes
+  roles:
+    - role: hampusstrom.vmtemplate
+
+# OR
+
+- hosts: mytemplatevm
+  roles:
+    - role: hampusstrom.vmtemplate
+      become: yes
+```
+
+
+
+### XCP-ng/XenServer
+Requires the XE guest tools ISO to be mounted as a cdrom device on the guest.
+
+The role will automatically mount /dev/sr0 (can be changed using `vmtemplate_cdrom_path`) and install the guest tools from there.
 
 ## Role Variables
 
