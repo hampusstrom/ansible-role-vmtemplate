@@ -1,6 +1,6 @@
 ---
 
-# Update sources and packages.
+# TODO Update sources and packages.
 
 - name: "Clear /etc/machine-id"
   ansible.builtin.lineinfile:
@@ -60,3 +60,4 @@
   ansible.builtin.systemd:
     name: cloud-init
     enabled: true
+
