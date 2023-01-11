@@ -3,6 +3,25 @@
 
 An ansible role to automate the process of preparing a Linux VM guest for becoming a template in your favourite hypervisor.
 
+Steps taken:
+* Set the timezone
+* Install guest tools for the appropriate hypervisor
+* Set a generic hostname
+* Reboot the host to ensure no rogue processes/file locks exist for the user we're about to delete
+* Delete the current user by allowing root ssh login temporarily
+* Delete the home directory of the current user
+* Set the root user password, generate a strong password if not defined
+* Re-disable root ssh login
+* Update all packages
+* Delete SSH host keys (New ones are generated on first boot)
+* Delete log files
+* Delete root user .bash_history
+* Clear /etc/machine-id and /usr/lib/dbus/machine-id
+* Delete root user ssh keys
+* Install cloud-init and ensure it starts on boot
+* Shutdown the host when finished to not get dirty with log files again.
+
+
 ## Compatibility
 This role has been tested on the following platforms:
 * Debian 11 Guest on Proxmox 7.3.4
@@ -37,7 +56,7 @@ A linux virtual machine guest running on either:
 * KVM
 
 **`ansible_user` MUST BE DEFINED**
-Either 
+Either:
 
 Add ansible_user=username to your inventory
 ```ini
