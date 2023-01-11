@@ -6,7 +6,7 @@
 
 - name: Install guest tools.
   ansible.builtin.include_tasks:
-    file: "{{ ansible_virtualization_type | lower }}-guest-util.yml"
+    file: "guest-util/{{ ansible_virtualization_type | lower }}.yml"
   when: ansible_virtualization_role == "guest"
 
 - name: "Set generic hostname."
@@ -14,40 +14,9 @@
     name: localhost.localdomain
   when: ansible_virtualization_type != 'docker' # We can't change hostname of a running docker container (molecule)
 
-- name: Enable ssh root login.
-  ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
-    line: PermitRootLogin yes
-    regexp: ^PermitRootLogin
-  notify: restart sshd
-
-- name: Flush handlers.
-  ansible.builtin.meta: flush_handlers
-
-- name: Switch to the root user.
-  ansible.builtin.set_fact:
-    previous_ssh_user: "{{ ansible_user | default(ansible_facts.user_id) }}"
-    ansible_ssh_user: root
-    ansible_user: root
-
-- name: Reboot host
-  ansible.builtin.reboot:
-
-- name: Print previous_ssh_user
-  ansible.builtin.debug:
-    var: previous_ssh_user
-
-- name: Delete user {{ previous_ssh_user }}.
-  ansible.builtin.user:
-    name: "{{ previous_ssh_user }}"
-    state: absent
-  when: previous_ssh_user != 'root'
-
-- name: Disable ssh root login.
-  ansible.builtin.lineinfile:
-    path: /etc/ssh/sshd_config
-    line: PermitRootLogin no
-    regexp: ^PermitRootLogin
+- name: Delete the ansible_user.
+  ansible.builtin.include_tasks:
+    file: user-deletion.yml
 
 - name: Generate root password if not provided.
   ansible.builtin.set_fact:
