@@ -1,5 +1,13 @@
 ---
 
+- name: "Ensure {{ vmtemplate_cdrom_mount_path }} exists."
+  ansible.builtin.file:
+    path: "{{ vmtemplate_cdrom_mount_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
 # Your VM must have the guest tools ISO mounted to proceed.
 - name: "Attempt to mount xe-guest-utilities iso."
   ansible.posix.mount:
