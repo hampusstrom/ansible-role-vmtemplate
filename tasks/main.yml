@@ -1,34 +1,66 @@
 ---
 # tasks file for vmtemplate
 
+- ansible.builtin.debug:
+    var: ansible_env.USER
+
+#- name: Set ansible_user
+#  ansible.builtin.set_fact:
+#    ansible_user: "{{ ansible_env.USER }}"
+#  become: false
+
 - name: Set timezone.
   ansible.builtin.timezone:
     name: "{{ vmtemplate_timezone }}"
 
-- name: Install xe-guest-utilities (XCP-NG/XenServer guests).
+- name: Install guest tools.
   ansible.builtin.include_tasks:
-    file: xen-guest-util.yml
-  when: ansible_virtualization_role == "guest" and ansible_virtualization_type == "xen"
-
-- name: Install QEMU Guest Agent (Proxmox/KVM).
-  ansible.builtin.include_tasks:
-    file: kvm-guest-util.yml
-  when: ansible_virtualization_role == "guest" and ansible_virtualization_type == "kvm"
+    file: "{{ ansible_virtualization_type | lower }}-guest-util.yml"
+  when: ansible_virtualization_role == "guest"
 
 - name: "Set generic hostname."
   ansible.builtin.hostname:
     name: localhost.localdomain
   when: ansible_virtualization_type != 'docker' # We can't change hostname of a running docker container (molecule)
 
-- name: Unconfigure guest (Debian family).
-  ansible.builtin.include_tasks:
-    file: debian.yml
-  when: ansible_os_family == "Debian"
+- name: Enable ssh root login.
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    line: PermitRootLogin yes
+    regexp: ^PermitRootLogin
+  notify: restart sshd
 
-- name: Unconfigure guest (Redhat family).
+- name: Flush handlers.
+  ansible.builtin.meta: flush_handlers
+
+- name: Switch to the root user.
+  ansible.builtin.set_fact:
+    previous_ssh_user: "{{ ansible_user | default(ansible_env.USER) }}"
+    ansible_ssh_user: root
+    ansible_user: root
+
+- name: Reboot host
+  ansible.builtin.reboot:
+
+- name: Print previous_ssh_user
+  ansible.builtin.debug:
+    var: previous_ssh_user
+
+- name: Delete ansible_user.
+  ansible.builtin.user:
+    name: "{{ previous_ssh_user }}"
+    state: absent
+ # when: previous_ssh_user != 'root'
+
+- name: Disable ssh root login.
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    line: PermitRootLogin no
+    regexp: ^PermitRootLogin
+
+- name: Unconfigure Guest
   ansible.builtin.include_tasks:
-    file: redhat.yml
-  when: ansible_os_family == "RedHat"
+    file: "{{ ansible_os_family | lower }}.yml"
 
 - name: Shutdown guest.
   community.general.shutdown:
