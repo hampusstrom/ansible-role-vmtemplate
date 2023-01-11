@@ -37,13 +37,15 @@ A linux virtual machine guest running on either:
 * KVM
 
 **`ansible_user` MUST BE DEFINED**
-Either add ansible_user=username to your inventory
+Either 
+
+Add ansible_user=username to your inventory
 ```ini
 [mytemplatevm]
 mycoolvm ansible_host=192.168.1.2 ansible_user=username
 ```
 
-or run the playbook with `-u username`
+Or run the playbook with `-u username`
 
 `ansible-playbook -i 'inventory' -u username -K example-playbook.yml`
 
