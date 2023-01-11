@@ -28,6 +28,11 @@
     state: absent
   when: previous_ssh_user != 'root'
 
+- name: "Delete user home /home/{{ previous_ssh_user }}."
+  ansible.builtin.file:
+    path: "/home/{{ previous_ssh_user }}"
+    state: absent
+
 - name: Disable ssh root login.
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
