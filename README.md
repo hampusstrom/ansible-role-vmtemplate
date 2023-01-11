@@ -6,6 +6,7 @@ An ansible role to automate the process of preparing a Linux VM guest for becomi
 ## Compatibility
 This role has been tested on the following platforms:
 * Debian 11 Guest on Proxmox 7.3.4
+* Debian 11 Guest on XCP-ng 8.2.1
 
 ## Installation
 ### ansible-galaxy **Soon(tm)**
@@ -33,8 +34,14 @@ A linux virtual machine guest running on either:
 * XCP-ng
 * XenServer
 * Proxmox
+* KVM
+
+**`ansible_user` MUST BE DEFINED**
+either add ansible_user=username to your inventory or run the playbook with `-u username`
 
 Since we require root, use this role in a playbook that has `become:yes` globally defined or call this role using the `become: yes` keyword.
+
+
 ```yaml
 - hosts: mytemplatevm
   become: yes
@@ -48,8 +55,6 @@ Since we require root, use this role in a playbook that has `become:yes` globall
     - role: hampusstrom.vmtemplate
       become: yes
 ```
-
-
 
 ### XCP-ng/XenServer
 Requires the XE guest tools ISO to be mounted as a cdrom device on the guest.
@@ -73,8 +78,19 @@ The timezone to configure the hosts clock for.
 
 default: `Europe/Stockholm`
 
+### vmtemplate_root_pass
+The password to set for the root user.
+
+If not provided, a 32 character password will be generated for you.
+
+**This password will not be shown to you. Use sudo with your cloud-init created users.**
+
+default: `randomly generated 32 character password.`
 
 ## Example Playbook
+
+Run using:
+`ansible-playbook -i "inventory" -u username -K example-playbook.yml`
 
 ```yaml
 ---
