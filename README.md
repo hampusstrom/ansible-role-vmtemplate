@@ -37,7 +37,17 @@ A linux virtual machine guest running on either:
 * KVM
 
 **`ansible_user` MUST BE DEFINED**
-either add ansible_user=username to your inventory or run the playbook with `-u username`
+Either add ansible_user=username to your inventory
+```toml
+[mytemplatevm]
+mycoolvm ansible_host=192.168.1.2 ansible_user=username
+```
+
+or run the playbook with `-u username`
+
+`ansible-playbook -i 'inventory' -u username -K example-playbook.yml`
+
+
 
 Since we require root, use this role in a playbook that has `become:yes` globally defined or call this role using the `become: yes` keyword.
 
