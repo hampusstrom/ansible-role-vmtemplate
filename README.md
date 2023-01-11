@@ -38,7 +38,7 @@ A linux virtual machine guest running on either:
 
 **`ansible_user` MUST BE DEFINED**
 Either add ansible_user=username to your inventory
-```toml
+```ini
 [mytemplatevm]
 mycoolvm ansible_host=192.168.1.2 ansible_user=username
 ```
