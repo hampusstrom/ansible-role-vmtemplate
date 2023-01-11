@@ -3,6 +3,9 @@
 
 An ansible role to automate the process of preparing a Linux VM guest for becoming a template in your favourite hypervisor.
 
+This role is designed to be run AFTER you've made all your own customizations.
+Installing packages, running hardening baselines etc.
+
 Steps taken:
 * Set the timezone
 * Install guest tools for the appropriate hypervisor
