@@ -1,5 +1,11 @@
 ---
 # defaults file for vmtemplate
+# The path to the disk drive where your ISO files are inserted
 vmtemplate_cdrom_path: /dev/sr0
+# The path to mount ISO files to.
 vmtemplate_cdrom_mount_path: /mnt
+# The timezone to set on the guest
 vmtemplate_timezone: Europe/Stockholm
+# The password to set for the root user. If not provided, a 32 character password will be generated for you.
+# This password will not be shown to you. Use sudo with your cloud-init created users.
+# vmtemplate_root_pass
