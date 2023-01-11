@@ -1,14 +1,5 @@
 ---
 # tasks file for vmtemplate
-
-- ansible.builtin.debug:
-    var: ansible_env.USER
-
-#- name: Set ansible_user
-#  ansible.builtin.set_fact:
-#    ansible_user: "{{ ansible_env.USER }}"
-#  become: false
-
 - name: Set timezone.
   ansible.builtin.timezone:
     name: "{{ vmtemplate_timezone }}"
@@ -35,7 +26,7 @@
 
 - name: Switch to the root user.
   ansible.builtin.set_fact:
-    previous_ssh_user: "{{ ansible_user | default(ansible_env.USER) }}"
+    previous_ssh_user: "{{ ansible_user | default(ansible_facts.user_id) }}"
     ansible_ssh_user: root
     ansible_user: root
 
@@ -46,17 +37,29 @@
   ansible.builtin.debug:
     var: previous_ssh_user
 
-- name: Delete ansible_user.
+- name: Delete user {{ previous_ssh_user }}.
   ansible.builtin.user:
     name: "{{ previous_ssh_user }}"
     state: absent
- # when: previous_ssh_user != 'root'
+  when: previous_ssh_user != 'root'
 
 - name: Disable ssh root login.
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     line: PermitRootLogin no
     regexp: ^PermitRootLogin
+
+- name: Generate root password if not provided.
+  ansible.builtin.set_fact:
+    vmtemplate_root_pass: "{{ lookup('ansible.builtin.password', '/dev/null chars=ascii_letters length=32') }}"
+  when: vmtemplate_root_pass is not defined or vmtemplate_root_pass == ''
+  no_log: true
+
+- name: Set root password.
+  ansible.builtin.user:
+    name: "root"
+    password: "{{ vmtemplate_root_pass }}"
+  no_log: true
 
 - name: Unconfigure Guest
   ansible.builtin.include_tasks:
