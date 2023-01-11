@@ -1,6 +1,6 @@
 ---
 # Run with command:
-# ansible-playbook- i "yourinventoryfile" -K example-playbook.yml
+# ansible-playbook- i "yourinventoryfile" -u username -K example-playbook.yml
 - hosts: mytemplatevm
   gather_facts: true
   become: true
